@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class MyDatabase extends SQLiteOpenHelper {
     private static final String TAG = "MyDatabase";
     public static final int DATABASE_VERSION = 1;
@@ -126,6 +128,19 @@ public class MyDatabase extends SQLiteOpenHelper {
 
     }
 
+    //Connect the new user to database and set your id.
+    public void connectUser(String user_name){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Get user id
+        Cursor user =  db.rawQuery( "SELECT * FROM " + USERS + " WHERE " + USERS_NAME + " = '" + user_name +"'", null );
+        user.moveToFirst();
+        this.user_id = user.getInt(user.getColumnIndex(USERS_ID));
+        Log.i(TAG, "User:" + user_name + " id: " + String.valueOf(user_id));
+        db.close();
+
+    }
+
     //Insert votes to a  new user into Vote table.
     private void insertVotesToUser(){
         Log.i(TAG, "Insert votes to user: " + String.valueOf(user_id));
@@ -172,7 +187,7 @@ public class MyDatabase extends SQLiteOpenHelper {
     }
 
     //Update in the VOTE table the problem name voted column to 1.
-    public void votedTo(String problem_name){
+    public void votedTo(String problem_name , int ticket){
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor problem =  db.rawQuery( "SELECT * " +
                 "FROM " + PROBLEMS +
@@ -180,11 +195,48 @@ public class MyDatabase extends SQLiteOpenHelper {
         problem.moveToFirst();
         int problem_id = problem.getInt(problem.getColumnIndex(PROBLEMS_ID));
         ContentValues update = new ContentValues();
+        update.put(VOTE_TICKET,ticket);
         update.put(VOTE_VOTED,1);
         db.update(VOTE,update,VOTE_USER_ID + " = " + user_id + " AND " + VOTE_PROBLEM_ID + " = " + problem_id,null);
 
 
         db.close();
+    }
+
+    public ArrayList<String> getVotes (String problem_name){
+        ArrayList<String> array_list = new ArrayList<String>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //Get problem id.
+        Cursor problem =  db.rawQuery( "SELECT * " +
+                "FROM " + PROBLEMS +
+                " WHERE " + PROBLEMS_NAME + " = '" + problem_name + "'", null );
+        problem.moveToFirst();
+        int problem_id = problem.getInt(problem.getColumnIndex(PROBLEMS_ID));
+
+        Cursor votes =  db.rawQuery( "SELECT * " +
+                "FROM " + VOTE +
+                " WHERE " + VOTE_PROBLEM_ID + " = '" + problem_id + "' " +
+                "AND " + VOTE_VOTED + " = " + 1, null );
+
+        votes.moveToFirst();
+        while(votes.isAfterLast() == false){
+
+            //Get user name.
+            Cursor user =  db.rawQuery( "SELECT * " +
+                    "FROM " + USERS +
+                    " WHERE " + USERS_ID + " = " + votes.getInt(votes.getColumnIndex(VOTE_USER_ID)), null );
+            user.moveToFirst();
+            String user_name = user.getString(user.getColumnIndex(USERS_NAME));
+
+
+            String string = user_name + " " +  votes.getInt(votes.getColumnIndex(VOTE_TICKET));
+            array_list.add(string);
+            votes.moveToNext();
+        }
+
+        db.close();
+        return array_list;
     }
 
 

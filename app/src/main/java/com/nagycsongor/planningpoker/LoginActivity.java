@@ -4,9 +4,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -29,16 +31,17 @@ public class LoginActivity extends AppCompatActivity {
     {
         String userName = name.getText().toString();
 
-        //INSERT userName into DB
-        MyDatabase database =new MyDatabase(this);
-        //database.insertProblem("bajvanhey");
-        //database.getP();
-        database.insertUser(userName);
-        String newVoteName = database.getNewVote();
-        database.votedTo(newVoteName);
+        if (TextUtils.isEmpty(userName)){
+            Toast.makeText(this,"Enter your name!",Toast.LENGTH_LONG).show();
+        }else{
+            //INSERT userName into DB
+            MyDatabase database =new MyDatabase(this);
+            database.insertUser(userName);
 
-        Intent intent = new Intent(this,MainActivity.class);
-        startActivity(intent);
-
+            //Go to the MainActivity.
+            Intent intent = new Intent(this,MainActivity.class);
+            intent.putExtra(MainActivity.USER_NAME,userName);
+            startActivity(intent);
+        }
     }
 }
