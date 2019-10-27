@@ -25,20 +25,24 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public void login(View view)
-    {
+    public void login(View view) {
+
         String userName = name.getText().toString();
 
-        //INSERT userName into DB
-        MyDatabase database =new MyDatabase(this);
-        //database.insertProblem("bajvanhey");
-        //database.getP();
-        database.insertUser(userName);
-        String newVoteName = database.getNewVote();
-        database.votedTo(newVoteName);
+        if (!userName.isEmpty()) {
+            //INSERT userName into DB
+            MyDatabase database = new MyDatabase(this);
+            //database.insertProblem("bajvanhey");
+            //database.getP();
+            database.insertUser(userName);
+            String newVoteName = database.getNewVote();
+            database.votedTo(newVoteName);
 
-        Intent intent = new Intent(this,MainActivity.class);
-        startActivity(intent);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("userName",userName);
+            startActivity(intent);
+        }
+
 
     }
 }
