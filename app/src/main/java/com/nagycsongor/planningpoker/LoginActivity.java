@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -25,8 +26,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    public void login(View view) {
-
+    public void login(View view)
+    {
         String userName = name.getText().toString();
 
         if (!userName.isEmpty()) {
@@ -41,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("userName",userName);
             startActivity(intent);
+        } else {
+            Toast.makeText(this,"Enter your name!", Toast.LENGTH_LONG).show();
         }
 
 
