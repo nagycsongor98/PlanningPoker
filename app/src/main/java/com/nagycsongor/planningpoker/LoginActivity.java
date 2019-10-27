@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
             //database.getP();
             database.insertUser(userName);
             String newVoteName = database.getNewVote();
-            database.votedTo(newVoteName);
+//            database.votedTo(newVoteName);
 
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("userName",userName);

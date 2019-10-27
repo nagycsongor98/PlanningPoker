@@ -21,24 +21,14 @@ public class MainActivity extends AppCompatActivity {
         intent = getIntent();
         String userName = intent.getStringExtra("userName");
 
-        MyDatabase database = new MyDatabase(this);
-        database.insertUser(userName);
-        String newVoteName = database.getNewVote();
-        database.votedTo(newVoteName);
-        database.connectUser(userName);
-
-        String voteTo = database.getNewVote();
-        if (voteTo == "") {
-            Log.i(TAG,"Don't have vote");
-        }
-        else {
-            Log.i(TAG,"Next vote: " + voteTo);
-
-        }
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        VoteFragment voteFragment = new VoteFragment();
-        fragmentManager.beginTransaction().replace(R.id.container,voteFragment).commit();
+        VoteFragment voteFragment = new VoteFragment(this);
+
+        Bundle args = new Bundle();
+        args.putString("userName", userName);
+        voteFragment.setArguments(args);
+        fragmentManager.beginTransaction().replace(R.id.container, voteFragment).commit();
 
     }
 }
