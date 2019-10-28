@@ -228,9 +228,16 @@ public class MyDatabase extends SQLiteOpenHelper {
                     " WHERE " + USERS_ID + " = " + votes.getInt(votes.getColumnIndex(VOTE_USER_ID)), null );
             user.moveToFirst();
             String user_name = user.getString(user.getColumnIndex(USERS_NAME));
+            String string;
+            if(votes.getInt(votes.getColumnIndex(VOTE_TICKET)) == -1){
+                string = user_name + " ?";
+            }else if (votes.getInt(votes.getColumnIndex(VOTE_TICKET)) == -2){
+                string = user_name + " Coffee Time!";
+            }
+            else{
+                string = user_name + " " +  votes.getInt(votes.getColumnIndex(VOTE_TICKET));
+            }
 
-
-            String string = user_name + " " +  votes.getInt(votes.getColumnIndex(VOTE_TICKET));
             array_list.add(string);
             votes.moveToNext();
         }

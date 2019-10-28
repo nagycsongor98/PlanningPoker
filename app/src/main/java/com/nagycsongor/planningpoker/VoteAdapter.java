@@ -40,7 +40,7 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 voteNumber = position;
-                Toast.makeText(context,"Card is clicked " + position, Toast.LENGTH_LONG).show();
+//                Toast.makeText(context,"Card is clicked " + position, Toast.LENGTH_LONG).show();
 
             }
         });
@@ -52,7 +52,7 @@ public class VoteAdapter extends RecyclerView.Adapter<VoteAdapter.ViewHolder> {
     }
 
     public int getVoteNumber() {
-        Toast.makeText(context,"VoteNumber " + this.voteNumber, Toast.LENGTH_LONG).show();
+//        Toast.makeText(context,"VoteNumber " + this.voteNumber, Toast.LENGTH_LONG).show();
         return this.voteNumber;
 
     }

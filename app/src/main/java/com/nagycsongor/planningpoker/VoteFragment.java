@@ -27,10 +27,11 @@ public class VoteFragment extends Fragment {
     private Button voteButton;
     public Context context;
     public Integer voteNumber;
+    private MyDatabase database;
 
     private static final String TAG = "VoteFragment";
 
-    public VoteFragment(Context context){
+    public VoteFragment(Context context) {
         this.context = context;
     }
 
@@ -43,118 +44,15 @@ public class VoteFragment extends Fragment {
         Bundle args = getArguments();
         final String userName = args != null ? args.getString("userName") : null;
 
-        final MyDatabase database = new MyDatabase(context);
-        Log.i(TAG,  "VoteFragment onCreate userName:" + userName);
+        database = new MyDatabase(context);
+        Log.i(TAG, "VoteFragment onCreate userName:" + userName);
         database.connectUser(userName);
-
-        final String voteTo = database.getNewVote();
-        if (voteTo.isEmpty()) {
-            Log.i(TAG, "Don't have vote");
-        } else {
-            Log.i(TAG, "Next vote: " + voteTo);
-
-        }
-        voteNumber = -1;
         voteButton = view.findViewById(R.id.voteButton);
         problem = view.findViewById(R.id.voteProblem);
         recyclerView = view.findViewById(R.id.gridRecyclerView);
-
-        if (voteTo.isEmpty())
-        {
-            problem.setText("Nincs tobb task");
-
-        } else {
-            problem.setText(voteTo);
-
-        }
-        adapter = new VoteAdapter(getContext(),numbers);
-
+        adapter = new VoteAdapter(getContext(), numbers);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
-
-        voteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context,ListFragment.class);
-                int voteNumber = adapter.getVoteNumber();
-                Toast.makeText(context,"Number " + voteNumber, Toast.LENGTH_LONG).show();
-                switch (voteNumber) {
-                    case 0 : {
-                        intent.putExtra("voteNumber","1");
-                        Toast.makeText(context,"One", Toast.LENGTH_LONG).show();
-                        database.votedTo(voteTo,0);
-                        break;
-                    }
-                    case 1 : {
-                        intent.putExtra("voteNumber","2");
-                        Toast.makeText(context,"Two", Toast.LENGTH_LONG).show();
-                        database.votedTo(voteTo,2);
-                        break;
-                    }
-                    case 2 : {
-                        intent.putExtra("voteNumber","3");
-                        Toast.makeText(context,"Three", Toast.LENGTH_LONG).show();
-                        database.votedTo(voteTo,3);
-                        break;
-                    }
-                    case 3 : {
-                        intent.putExtra("voteNumber","5");
-                        Toast.makeText(context,"Five", Toast.LENGTH_LONG).show();
-                        database.votedTo(voteTo,5);
-                        break;
-                    }
-                    case 4 : {
-                        intent.putExtra("voteNumber","7");
-                        Toast.makeText(context,"Seven", Toast.LENGTH_LONG).show();
-                        database.votedTo(voteTo,7);
-                        break;
-                    }
-                    case 5 : {
-                        intent.putExtra("voteNumber","10");
-                        Toast.makeText(context,"Ten", Toast.LENGTH_LONG).show();
-                        database.votedTo(voteTo,10);
-                        break;
-                    }
-                    case 6 : {
-                        intent.putExtra("voteNumber","20");
-                        Toast.makeText(context,"Twenty", Toast.LENGTH_LONG).show();
-                        break;
-                    }
-                    case 7 : {
-                        intent.putExtra("voteNumber","50");
-                        Toast.makeText(context,"Fifty", Toast.LENGTH_LONG).show();
-                        database.votedTo(voteTo,20);
-
-                        break;
-                    }
-                    case 8 : {
-                        intent.putExtra("voteNumber","100");
-                        Toast.makeText(context,"100", Toast.LENGTH_LONG).show();
-                        database.votedTo(voteTo,100);
-
-                        break;
-                    }
-                    case 9 : {
-                        intent.putExtra("voteNumber","?");
-                        Toast.makeText(context,"Question Mark", Toast.LENGTH_LONG).show();
-                        database.votedTo(voteTo,-1);
-                        break;
-                    }
-                    case 10 : {
-                        intent.putExtra("voteNumber","Coffee");
-                        Toast.makeText(context,"Coffee Time!", Toast.LENGTH_LONG).show();
-                        database.votedTo(voteTo,-2);
-                        break;
-                    }
-                    default : {
-                        Toast.makeText(context,"Please click a value!", Toast.LENGTH_LONG).show();
-                    }
-                }
-
-
-            }
-        });
-
         return view;
     }
 
@@ -175,5 +73,112 @@ public class VoteFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        final String voteTo = database.getNewVote();
+        voteNumber = -1;
+        if (voteTo.isEmpty()) {
+            problem.setText("Nincs tobb task");
+            voteButton.setClickable(false);
+        } else {
+            problem.setText(voteTo);
 
+            voteButton.setClickable(true);
+            voteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, MainActivity.class);
+                    int voteNumber = adapter.getVoteNumber();
+
+                    switch (voteNumber) {
+                        case 0: {
+                            intent.putExtra("voteTo", voteTo);
+                            startActivity(intent);
+                            Toast.makeText(context, "One", Toast.LENGTH_SHORT).show();
+                            database.votedTo(voteTo, 1);
+                            break;
+                        }
+                        case 1: {
+                            intent.putExtra("voteTo", voteTo);
+                            startActivity(intent);
+                            Toast.makeText(context, "Two", Toast.LENGTH_SHORT).show();
+                            database.votedTo(voteTo, 2);
+                            break;
+                        }
+                        case 2: {
+                            intent.putExtra("voteTo", voteTo);
+                            startActivity(intent);
+                            Toast.makeText(context, "Three", Toast.LENGTH_SHORT).show();
+                            database.votedTo(voteTo, 3);
+                            break;
+                        }
+                        case 3: {
+                            intent.putExtra("voteTo", voteTo);
+                            startActivity(intent);
+                            Toast.makeText(context, "Five", Toast.LENGTH_SHORT).show();
+                            database.votedTo(voteTo, 5);
+                            break;
+                        }
+                        case 4: {
+                            intent.putExtra("voteTo", voteTo);
+                            startActivity(intent);
+                            Toast.makeText(context, "Seven", Toast.LENGTH_SHORT).show();
+                            database.votedTo(voteTo, 7);
+                            break;
+                        }
+                        case 5: {
+                            intent.putExtra("voteTo", voteTo);
+                            startActivity(intent);
+                            Toast.makeText(context, "Ten", Toast.LENGTH_SHORT).show();
+                            database.votedTo(voteTo, 10);
+                            break;
+                        }
+                        case 6: {
+                            intent.putExtra("voteTo", voteTo);
+                            startActivity(intent);
+                            Toast.makeText(context, "Twenty", Toast.LENGTH_SHORT).show();
+                            database.votedTo(voteTo, 20);
+                            break;
+                        }
+                        case 7: {
+                            intent.putExtra("voteTo", voteTo);
+                            startActivity(intent);
+                            Toast.makeText(context, "Fifty", Toast.LENGTH_SHORT).show();
+                            database.votedTo(voteTo, 50);
+
+                            break;
+                        }
+                        case 8: {
+                            intent.putExtra("voteTo", voteTo);
+                            startActivity(intent);
+                            Toast.makeText(context, "One Hundred", Toast.LENGTH_SHORT).show();
+                            database.votedTo(voteTo, 100);
+
+                            break;
+                        }
+                        case 9: {
+                            intent.putExtra("voteTo", voteTo);
+                            startActivity(intent);
+                            Toast.makeText(context, "?", Toast.LENGTH_SHORT).show();
+                            database.votedTo(voteTo, -1);
+                            break;
+                        }
+                        case 10: {
+                            intent.putExtra("voteTo", voteTo);
+                            startActivity(intent);
+                            Toast.makeText(context, "Coffee Time!", Toast.LENGTH_SHORT).show();
+                            database.votedTo(voteTo, -2);
+                            break;
+                        }
+                        default: {
+                            Toast.makeText(context, "Please click a value!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
+                }
+            });
+        }
+    }
 }

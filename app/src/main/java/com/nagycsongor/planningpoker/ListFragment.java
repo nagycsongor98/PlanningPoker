@@ -22,18 +22,19 @@ public class ListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_list, container, false);
+        Bundle args = getArguments();
+        problem = args != null ? args.getString("voteTo") : "";
 
-        problem = "LogIn";
+        if(!problem.isEmpty()) {
 
-        recyclerView = view.findViewById(R.id.votes_recyclerView);
-        layoutManager = new LinearLayoutManager(view.getContext());
-        recyclerView.setLayoutManager(layoutManager);
+            recyclerView = view.findViewById(R.id.votes_recyclerView);
+            layoutManager = new LinearLayoutManager(view.getContext());
+            recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new ListFragmentAdapter(view.getContext(),problem);
-        recyclerView.setAdapter(mAdapter);
-
+            mAdapter = new ListFragmentAdapter(view.getContext(), problem);
+            recyclerView.setAdapter(mAdapter);
+        }
         
         return view;
     }
